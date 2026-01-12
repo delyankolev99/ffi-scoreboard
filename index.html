@@ -70,23 +70,56 @@
     </div>
 </div>
  
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
 <script>
+    // 🔹 Paste your config here
+    const firebaseConfig = {
+        apiKey: "AIzaSyC6pTEy7JMKGKACG72WWX_UdOGmNClk9EM",
+        authDomain: "ffi-scoreboard.firebaseapp.com",
+        databaseURL: "https://ffi-scoreboard-default-rtdb.firebaseio.com",
+        projectId: "ffi-scoreboard",
+        storageBucket: "ffi-scoreboard.firebasestorage.app",
+        messagingSenderId: "614418259699",
+        appId: "1:614418259699:web:5985d92a051ae7e592a186"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    const db = firebase.database();
+    const scoresRef = db.ref("scores");
+
+    // Listen for real-time changes
+    scoresRef.on("value", snapshot => {
+        const data = snapshot.val();
+        if (!data) return;
+
+        document.getElementById("success-score").innerText = data["success-score"] ?? 0;
+        document.getElementById("patch-score").innerText = data["patch-score"] ?? 0;
+        document.getElementById("fix-score").innerText = data["fix-score"] ?? 0;
+    });
+
     function changeScore(id, delta) {
-        const element = document.getElementById(id);
-        let current = parseInt(element.innerText);
-        let newVal = current + delta;
-        if(newVal < 0) newVal = 0;
-        element.innerText = newVal;
+        scoresRef.child(id).transaction(current => {
+            const next = (current || 0) + delta;
+            return next < 0 ? 0 : next;
+        });
     }
- 
+
     function resetAll() {
-        if(confirm("Are you sure you want to reset all scores to zero?")) {
-            document.getElementById('success-score').innerText = "0";
-            document.getElementById('patch-score').innerText = "0";
-            document.getElementById('fix-score').innerText = "0";
+        if (confirm("Are you sure you want to reset all scores?")) {
+            scoresRef.set({
+                "success-score": 0,
+                "patch-score": 0,
+                "fix-score": 0
+            });
         }
     }
 </script>
+
  
 </body>
+
 </html>
