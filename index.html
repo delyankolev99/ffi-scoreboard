@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a1a; color: white; display: flex; flex-direction: column; align-items: center; padding-top: 50px; }
+    .container { text-align: center; width: 90%; max-width: 1000px; }
+    h1 { font-size: 3.5rem; letter-spacing: 3px; margin-bottom: 40px; color: #ffffff; border-bottom: 2px solid #444; padding-bottom: 15px; }
+    
+    .scoreboard { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+    .card { background: #2d2d2d; padding: 25px; border-radius: 20px; width: 260px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); border: 1px solid #444; }
+    
+    .emoji { font-size: 4rem; margin-bottom: 10px; display: block; }
+    .label { font-size: 1.1rem; font-weight: bold; margin-bottom: 15px; height: 50px; display: flex; align-items: center; justify-content: center; text-transform: uppercase; letter-spacing: 1px; }
+    .score { font-size: 6rem; font-weight: bold; margin-bottom: 20px; line-height: 1; }
+    
+    /* Indicator Colors */
+    .green { color: #4CAF50; text-shadow: 0 0 20px rgba(76, 175, 80, 0.3); }
+    .red { color: #FF5252; text-shadow: 0 0 20px rgba(255, 82, 82, 0.3); }
+    .yellow { color: #FFD740; text-shadow: 0 0 20px rgba(255, 215, 64, 0.3); }
+    
+    /* Buttons */
+    .controls button { background: #444; color: white; border: none; padding: 10px 25px; font-size: 1.8rem; cursor: pointer; border-radius: 8px; margin: 0 8px; transition: background 0.2s; }
+    .controls button:hover { background: #666; }
+    
+    .reset-container { margin-top: 60px; }
+    .reset-btn { background: #e74c3c; color: white; border: none; padding: 15px 40px; font-size: 1.2rem; font-weight: bold; border-radius: 50px; cursor: pointer; transition: transform 0.2s, background 0.2s; }
+    .reset-btn:hover { background: #c0392b; transform: scale(1.05); }
+    .reset-btn:active { transform: scale(0.95); }
+</style>
+</head>
+<body>
+ 
+<div class="container">
+    <h1>FFI SCOREBOARD</h1>
+    
+    <div class="scoreboard">
+        <div class="card">
+            <span class="emoji">😁</span>
+            <div class="label">Successful Deliveries</div>
+            <div id="success-score" class="score green">0</div>
+            <div class="controls">
+                <button onclick="changeScore('success-score', -1)">-</button>
+                <button onclick="changeScore('success-score', 1)">+</button>
+            </div>
+        </div>
+ 
+        <div class="card">
+            <span class="emoji">😭</span>
+            <div class="label">Patch Hits</div>
+            <div id="patch-score" class="score red">0</div>
+            <div class="controls">
+                <button onclick="changeScore('patch-score', -1)">-</button>
+                <button onclick="changeScore('patch-score', 1)">+</button>
+            </div>
+        </div>
+ 
+        <div class="card">
+            <span class="emoji">🥴</span>
+            <div class="label">Patch Hit Fix Deliveries</div>
+            <div id="fix-score" class="score yellow">0</div>
+            <div class="controls">
+                <button onclick="changeScore('fix-score', -1)">-</button>
+                <button onclick="changeScore('fix-score', 1)">+</button>
+            </div>
+        </div>
+    </div>
+ 
+    <div class="reset-container">
+        <button class="reset-btn" onclick="resetAll()">RESET ALL SCORES</button>
+    </div>
+</div>
+ 
+<script>
+    function changeScore(id, delta) {
+        const element = document.getElementById(id);
+        let current = parseInt(element.innerText);
+        let newVal = current + delta;
+        if(newVal < 0) newVal = 0;
+        element.innerText = newVal;
+    }
+ 
+    function resetAll() {
+        if(confirm("Are you sure you want to reset all scores to zero?")) {
+            document.getElementById('success-score').innerText = "0";
+            document.getElementById('patch-score').innerText = "0";
+            document.getElementById('fix-score').innerText = "0";
+        }
+    }
+</script>
+ 
+</body>
+</html>
